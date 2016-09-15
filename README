@@ -1,6 +1,7 @@
 Example of Singe page application.
 =================================
-Single Page Application on React, Flux, MaterialUI, NodeJS and MongoDB.
+Single Page Application on React, Flux, MaterialUI, NodeJS, ES6 and MongoDB.
+Packed by webpack.
 This application is the various of the famous Trello application.
 
 Installing
