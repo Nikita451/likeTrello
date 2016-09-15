@@ -1,0 +1,22 @@
+Example of Singe page application.
+=================================
+Single Page Application on React, Flux, MaterialUI, NodeJS and MongoDB.
+This application is the various of the famous Trello application.
+
+Installing
+================================
+To use this You will need to install
+1) git
+2) NodeJS
+
+Usage
+=================================
+1) git clone https://github.com/Nikita451/likeTrello.git
+2) cd likeTrello
+3) npm i
+4) npm start
+5) go to http://localhost:3000
+
+Authors
+================================
+Kozodiy Nikita (nikita451@yandex.ru)
