@@ -487,7 +487,8 @@
 	    value: function sendError(res, message) {
 	      res.statusCode = 500;
 	      res.statusMessage = message;
-	      res.send({ error: true });
+	      //res.send( { error: true, message: message } );
+	      res.send(message);
 	    }
 
 	    // response 200
@@ -1155,14 +1156,23 @@
 
 	var _FetchModel2 = _interopRequireDefault(_FetchModel);
 
+	var _mongoose = __webpack_require__(10);
+
+	var _mongoose2 = _interopRequireDefault(_mongoose);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var router = _express2.default.Router();
 
 	router.get("/:id_boad", function (req, res, next) {
-	  _models.List.find({ boad: req.params.id_boad }).lean().exec(function (err, lists) {
+
+	  //let idb =  "57cd8dccc41074912e60e766" ;
+	  var id_boad = req.params.id_boad;
+
+
+	  _models.List.find({ boad: id_boad }).lean().exec(function (err, lists) {
 	    if (err) {
-	      _DefaultResponse2.default.sendError(res, 'error fetch data');
+	      _DefaultResponse2.default.sendError(res, err);
 	    } else {
 	      _FetchModel2.default.bindCards(lists, function (err, result) {
 	        if (err) {

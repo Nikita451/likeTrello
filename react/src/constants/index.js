@@ -9,4 +9,6 @@ export default keyMirror({
 	BOAD_DELETE_FAIL    : null,
 	BOAD_UPDATE_SUCCESS : null,
 	BOAD_UPDATE_FAIL    : null,
+	LIST_LOAD_SUCCESS   : null,
+	LIST_LOAD_FAIL      : null,
 });

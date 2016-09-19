@@ -23,6 +23,10 @@ class BoadContainer extends React.Component {
     BoadAction.getAll();
   }
 
+  componentWillUnmount() {
+    BoadStore.removeChangeListener( this._onChange );
+  }
+
   _onChange = () => {
     this.setState( getState() );
   }

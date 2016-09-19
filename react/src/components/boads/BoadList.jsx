@@ -18,7 +18,7 @@ class BoadList extends React.Component {
 		      	this.props.boads.map((boad) => 
 		           <BoadView 
 		             key={boad._id}
-		             id={boad.id}
+		             id={boad._id}
 		             name={boad.name}
 		             deleteBoad={this.props.deleteBoad.bind(null, boad._id)}
 		             changeText={this.props.changeText.bind(null, boad._id)}

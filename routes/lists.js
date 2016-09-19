@@ -3,13 +3,16 @@ import { List, Card } from '../models';
 import RespDef from '../lib/DefaultResponse.js';
 import RemoveModel from '../lib/RemoveModel.js';
 import FetchModel from '../lib/FetchModel.js';
+import mongoose from 'mongoose';
 
 let router = express.Router();
 
 router.get("/:id_boad", (req, res, next) => {
-  List.find({boad:  req.params.id_boad }).lean().exec( (err, lists) => {
+  
+  let {id_boad} = req.params;
+  List.find({boad:  id_boad }).lean().exec( (err, lists) => {
     if (err) {
-      RespDef.sendError(res, 'error fetch data');
+      RespDef.sendError(res, "error fetch data");
     } else {
       FetchModel.bindCards(lists, (err, result) => {
         if (err) {
@@ -18,6 +21,7 @@ router.get("/:id_boad", (req, res, next) => {
           RespDef.sendData(res, lists);
         }
       });
+       
     }
   });
 });

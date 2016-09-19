@@ -15,8 +15,8 @@ const ESCAPE_CODE = 27;
 
 class BoadView extends React.Component {
 	
-	constructor(props) {
-		super(props);
+	constructor(props, context) {
+		super(props, context);
 		this.state = {
 	    isEditing: false,
 	    name: this.props.name
@@ -52,7 +52,14 @@ class BoadView extends React.Component {
   	});
     
     changeText( {name: this.state.name} );
-
+  }
+  
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+  
+  gotoLists = () => {
+    this.context.router.push( `/boad/${this.props.id}` );
   }
 
 	render() {
@@ -117,11 +124,12 @@ class BoadView extends React.Component {
               <MenuItem onClick={this.startEdit}>Изменить</MenuItem>
               <MenuItem onClick={this.props.deleteBoad}>Удалить</MenuItem>
            </IconMenu>
-           <FlatButton label="Войти" />
+           <FlatButton label="Войти" onClick={this.gotoLists} />
          </CardActions>
       </Card>
 		);
 	}
 }
+
 
 export default BoadView;
