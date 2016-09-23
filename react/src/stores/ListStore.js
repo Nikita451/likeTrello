@@ -15,6 +15,16 @@ class ListStore extends EventEmitter {
         return _lists;
     }
 
+    getCard(id) {
+        for (let i=0; i < _lists.length; i++) {
+            for (let j=0; j < _lists[i].cards.length; j++ ) {
+                if ( _lists[i].cards[j]._id == id ) {
+                    return _lists[i].cards[j];
+                }
+            }
+        }
+    }
+
     getError() {
         return _error;
     }

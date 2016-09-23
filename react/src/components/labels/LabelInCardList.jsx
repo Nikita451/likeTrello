@@ -1,12 +1,14 @@
 import React from 'react';
+import "./LabelInCardList.less";
 
 class LabelList extends React.Component {
     render() {
         return (
-            <div>
+            <div className="labelsInCard">
             {
+                
                 this.props.labels.map( (label) => 
-                    <p key={label._id}> label:  {label.name} </p>
+                    <span style={{background: label.color}} key={label._id}></span>
                 )
             }
             </div>

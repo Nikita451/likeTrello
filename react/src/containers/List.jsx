@@ -30,9 +30,13 @@ class ListContainer extends React.Component {
 
     render() {
         return (
-            <ListList
-              lists={this.state.lists}
-             />
+            <div>
+                <ListList
+                lists={this.state.lists}
+                id_boad={this.props.params.id}
+                />
+                {this.props.children}
+             </div>
         );
     }
 }

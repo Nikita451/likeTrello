@@ -72,6 +72,10 @@
 
 	var _List2 = _interopRequireDefault(_List);
 
+	var _CardViewDet = __webpack_require__(534);
+
+	var _CardViewDet2 = _interopRequireDefault(_CardViewDet);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	(0, _reactTapEventPlugin2.default)();
@@ -84,7 +88,11 @@
 	    _reactRouter.Route,
 	    { component: _App2.default },
 	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _Boad2.default }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/boad/:id', component: _List2.default })
+	    _react2.default.createElement(
+	      _reactRouter.Route,
+	      { path: '/boad/:id', component: _List2.default },
+	      _react2.default.createElement(_reactRouter.Route, { path: '/boad/:id/card/:id_card', component: _CardViewDet2.default })
+	    )
 	  )
 	), document.getElementById("mount-point"));
 
@@ -58570,9 +58578,15 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(_ListList2.default, {
-	                lists: this.state.lists
-	            });
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(_ListList2.default, {
+	                    lists: this.state.lists,
+	                    id_boad: this.props.params.id
+	                }),
+	                this.props.children
+	            );
 	        }
 	    }]);
 
@@ -58689,6 +58703,17 @@
 	            return _lists;
 	        }
 	    }, {
+	        key: 'getCard',
+	        value: function getCard(id) {
+	            for (var i = 0; i < _lists.length; i++) {
+	                for (var j = 0; j < _lists[i].cards.length; j++) {
+	                    if (_lists[i].cards[j]._id == id) {
+	                        return _lists[i].cards[j];
+	                    }
+	                }
+	            }
+	        }
+	    }, {
 	        key: 'getError',
 	        value: function getError() {
 	            return _error;
@@ -58752,6 +58777,12 @@
 
 	var _ListView2 = _interopRequireDefault(_ListView);
 
+	var _ListSearch = __webpack_require__(529);
+
+	var _ListSearch2 = _interopRequireDefault(_ListSearch);
+
+	__webpack_require__(532);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -58772,16 +58803,24 @@
 	    _createClass(ListList, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
 	            return _react2.default.createElement(
 	                'div',
-	                null,
-	                this.props.lists.map(function (list) {
-	                    return _react2.default.createElement(_ListView2.default, {
-	                        key: list._id,
-	                        name: list.name,
-	                        cards: list.cards
-	                    });
-	                })
+	                { className: 'listPage' },
+	                _react2.default.createElement(_ListSearch2.default, null),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'lists' },
+	                    this.props.lists.map(function (list) {
+	                        return _react2.default.createElement(_ListView2.default, {
+	                            key: list._id,
+	                            name: list.name,
+	                            cards: list.cards,
+	                            id_boad: _this2.props.id_boad
+	                        });
+	                    })
+	                )
 	            );
 	        }
 	    }]);
@@ -58811,6 +58850,8 @@
 
 	var _CardList2 = _interopRequireDefault(_CardList);
 
+	__webpack_require__(527);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -58838,17 +58879,23 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'listView' },
+	        { className: 'list' },
 	        _react2.default.createElement(
-	          'h2',
+	          'h4',
 	          null,
 	          ' ',
 	          name,
 	          ' '
 	        ),
 	        _react2.default.createElement(_CardList2.default, {
-	          cards: this.props.cards
-	        })
+	          cards: this.props.cards,
+	          id_boad: this.props.id_boad
+	        }),
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'last_punkt' },
+	          'Добавить карточку'
+	        )
 	      );
 	    }
 	  }]);
@@ -58898,15 +58945,19 @@
 	    _createClass(CardList, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
 	            return _react2.default.createElement(
 	                'div',
 	                null,
 	                this.props.cards.map(function (card) {
 	                    return _react2.default.createElement(_CardView2.default, {
+	                        id: card._id,
 	                        key: card._id,
 	                        name: card.name,
 	                        labels: card.labels,
-	                        comments: card.comments
+	                        comments: card.comments,
+	                        id_boad: _this2.props.id_boad
 	                    });
 	                })
 	            );
@@ -58938,6 +58989,8 @@
 
 	var _LabelInCardList2 = _interopRequireDefault(_LabelInCardList);
 
+	__webpack_require__(525);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -58949,38 +59002,68 @@
 	var CardView = function (_React$Component) {
 	    _inherits(CardView, _React$Component);
 
-	    function CardView() {
+	    function CardView(props, context) {
 	        _classCallCheck(this, CardView);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(CardView).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CardView).call(this, props, context));
+
+	        _this.goToCard = function (id_boad, id_card) {
+	            //const {id} = this.props.params;
+	            //alert( id_boad + "  " + id_card );
+	            _this.context.router.push('/boad/' + id_boad + '/card/' + id_card);
+	        };
+
+	        return _this;
 	    }
 
 	    _createClass(CardView, [{
 	        key: 'render',
 	        value: function render() {
 	            var _props = this.props;
+	            var id = _props.id;
 	            var name = _props.name;
 	            var labels = _props.labels;
 	            var comments = _props.comments;
+	            var id_boad = _props.id_boad;
 
 	            return _react2.default.createElement(
 	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    ' List:  ',
-	                    name,
-	                    ' '
-	                ),
+	                { className: 'card', onClick: this.goToCard.bind(null, id_boad, id) },
 	                _react2.default.createElement(_LabelInCardList2.default, {
 	                    labels: labels
 	                }),
 	                _react2.default.createElement(
 	                    'p',
+	                    { className: 'nameLiSpan' },
+	                    ' ',
+	                    name,
+	                    ' '
+	                ),
+	                _react2.default.createElement(
+	                    'p',
 	                    null,
-	                    'Comments: ',
-	                    comments.length
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'beauty_elem' },
+	                        'Комментариев',
+	                        _react2.default.createElement(
+	                            'span',
+	                            null,
+	                            ' ',
+	                            comments.length,
+	                            ' '
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'beauty_elem' },
+	                        'Файлов',
+	                        _react2.default.createElement(
+	                            'span',
+	                            null,
+	                            ' 0 '
+	                        )
+	                    )
 	                )
 	            );
 	        }
@@ -58989,13 +59072,16 @@
 	    return CardView;
 	}(_react2.default.Component);
 
+	CardView.contextTypes = {
+	    router: _react2.default.PropTypes.object.isRequired
+	};
 	exports.default = CardView;
 
 /***/ },
 /* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -59006,6 +59092,8 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(523);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -59025,19 +59113,13 @@
 	    }
 
 	    _createClass(LabelList, [{
-	        key: 'render',
+	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
-	                'div',
-	                null,
+	                "div",
+	                { className: "labelsInCard" },
 	                this.props.labels.map(function (label) {
-	                    return _react2.default.createElement(
-	                        'p',
-	                        { key: label._id },
-	                        ' label:  ',
-	                        label.name,
-	                        ' '
-	                    );
+	                    return _react2.default.createElement("span", { style: { background: label.color }, key: label._id });
 	                })
 	            );
 	        }
@@ -59047,6 +59129,333 @@
 	}(_react2.default.Component);
 
 	exports.default = LabelList;
+
+/***/ },
+/* 523 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(524);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(340)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./LabelInCardList.less", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./LabelInCardList.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(339)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".labelsInCard span {\n  margin: 0px 2px;\n  display: inline-block;\n  width: 30px;\n  height: 10px;\n  border-radius: 5px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(526);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(340)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./CardView.less", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./CardView.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 526 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(339)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".card {\n  font-size: 0.9em;\n  min-height: 58px;\n  border: 1px solid #999;\n  color: #4d4d4d;\n  margin: 0px;\n  position: relative;\n  left: 0px;\n  /* top: -20px; */\n  top: 0px;\n  margin-top: 5px;\n  display: block;\n  padding: 10px 15px;\n  background-color: #fff;\n}\n.card .nameLiSpan {\n  font-weight: bold;\n  display: inline-block;\n  margin-bottom: 4px;\n  font-size: 14px;\n  color: #4d4d4d;\n}\n.card .beauty_elem {\n  background: #08C2B9;\n  color: #fff;\n  padding: 2px 5px;\n  font-size: 12px;\n  border: 1px solid #C5C6C6;\n  padding-left: 5px;\n  border-radius: 5px;\n  margin-right: 3px;\n}\n.card .beauty_elem span {\n  background: #fff;\n  color: #000;\n  padding: 2px 5px;\n  position: relative;\n  left: 6px;\n  top: 0px;\n  border-radius: 0px 4px 4px 0px;\n  font-size: 12px;\n  border: 1px solid #C5C6C6;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 527 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(528);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(340)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListView.less", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListView.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 528 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(339)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".list {\n  border-radius: 6px;\n  width: 250px;\n  min-height: 100px;\n  margin: 5px;\n  cursor: pointer;\n  float: left;\n  background-color: #ededed;\n  border: 1px solid #898989;\n  box-shadow: 1px 1px 3px #b2b3b3;\n  height: auto;\n  padding: 0px 10px;\n}\n.list h4 {\n  margin-left: 5px;\n  color: #23a2d9;\n  font-size: 16px;\n  position: relative;\n  left: 9px;\n  top: 10px;\n  font-weight: bold;\n  width: 80%;\n}\n.list .last_punkt {\n  color: #4d4d4d;\n  position: relative;\n  left: 14px;\n  top: -10px;\n  font-size: 0.95em;\n  z-index: 111;\n  padding-top: 15px;\n  padding-bottom: 5px;\n}\n.list .card:first-child {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.list .card:last-child {\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 529 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TextField = __webpack_require__(331);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _FloatingActionButton = __webpack_require__(342);
+
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+
+	var _add = __webpack_require__(344);
+
+	var _add2 = _interopRequireDefault(_add);
+
+	__webpack_require__(530);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ListSearch = function (_React$Component) {
+	    _inherits(ListSearch, _React$Component);
+
+	    function ListSearch() {
+	        _classCallCheck(this, ListSearch);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ListSearch).apply(this, arguments));
+	    }
+
+	    _createClass(ListSearch, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'searchPanel' },
+	                _react2.default.createElement(_TextField2.default, {
+	                    hintText: 'Поиск списков'
+	                }),
+	                _react2.default.createElement(
+	                    _FloatingActionButton2.default,
+	                    { mini: true },
+	                    _react2.default.createElement(_add2.default, null)
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ListSearch;
+	}(_react2.default.Component);
+
+	exports.default = ListSearch;
+
+/***/ },
+/* 530 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(531);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(340)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListSearch.less", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListSearch.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(339)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".searchPanel {\n  background-color: #fff;\n  margin-left: 35%;\n  display: inline-block;\n  padding: 5px;\n  margin-bottom: 15px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(533);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(340)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListList.less", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/autoprefixer-loader/index.js!./../../../../node_modules/less-loader/index.js!./ListList.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 533 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(339)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "", ""]);
+
+	// exports
+
+
+/***/ },
+/* 534 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _ListStore = __webpack_require__(517);
+
+	var _ListStore2 = _interopRequireDefault(_ListStore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CardViewDetail = function (_React$Component) {
+	    _inherits(CardViewDetail, _React$Component);
+
+	    function CardViewDetail(props) {
+	        _classCallCheck(this, CardViewDetail);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(CardViewDetail).call(this, props));
+	    }
+
+	    _createClass(CardViewDetail, [{
+	        key: 'render',
+	        value: function render() {
+	            var card = _ListStore2.default.getCard(this.props.params.id_card);
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                'Детальный просмотр карточки.  ',
+	                _react2.default.createElement('br', null),
+	                'card: ',
+	                card.name
+	            );
+	        }
+	    }]);
+
+	    return CardViewDetail;
+	}(_react2.default.Component);
+
+	exports.default = CardViewDetail;
 
 /***/ }
 /******/ ]);
