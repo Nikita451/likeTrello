@@ -20,6 +20,47 @@ class ListAction {
             }
         });
     }
+
+    static createList(id_boad, name) {
+      $.ajax({
+        url: '/lists',
+        type: 'POST',
+        data: { name: name, boad: id_boad },
+        success: function (item) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_CREATE_SUCCESS,
+            item: item,
+          });
+        },
+        error: function (err) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_CREATE_FAIL,
+            error: err,
+          });
+        }
+      });
+    }
+
+    static updateList(id_list, name) {
+      $.ajax({
+        url: `/lists/${id_list}`,
+        type: 'PUT',
+        data: { name: name },
+        success: function (item) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_UPDATE_SUCCESS,
+            item: item,
+          });
+        },
+        error: function (err) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_UPDATE_FAIL,
+            error: err,
+          });
+        }
+      });
+    }
+
 }
 
 export default ListAction;

@@ -7,6 +7,17 @@ import mongoose from 'mongoose';
 
 let router = express.Router();
 
+
+router.get("/:id_boad",  (req, res, next) => {
+  FetchModel.getAllWithoutNested( (err, data) => {
+    if (err) {
+      RespDef.sendError(res, 'Error fetch data');
+    } else {
+      RespDef.sendData( res, data );
+    }
+  });
+});
+/*
 router.get("/:id_boad", (req, res, next) => {
   
   let {id_boad} = req.params;
@@ -24,7 +35,7 @@ router.get("/:id_boad", (req, res, next) => {
        
     }
   });
-});
+});*/
 
 router.post("/", (req, res, next) => {
   const {name, boad} = req.body;

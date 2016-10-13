@@ -488,7 +488,7 @@
 	      res.statusCode = 500;
 	      res.statusMessage = message;
 	      //res.send( { error: true, message: message } );
-	      res.send(message);
+	      res.send({ error: true, message: message });
 	    }
 
 	    // response 200
@@ -1165,25 +1165,33 @@
 	var router = _express2.default.Router();
 
 	router.get("/:id_boad", function (req, res, next) {
-
-	  //let idb =  "57cd8dccc41074912e60e766" ;
-	  var id_boad = req.params.id_boad;
-
-
-	  _models.List.find({ boad: id_boad }).lean().exec(function (err, lists) {
+	  _FetchModel2.default.getAllWithoutNested(function (err, data) {
 	    if (err) {
-	      _DefaultResponse2.default.sendError(res, err);
+	      _DefaultResponse2.default.sendError(res, 'Error fetch data');
 	    } else {
-	      _FetchModel2.default.bindCards(lists, function (err, result) {
-	        if (err) {
-	          _DefaultResponse2.default.sendError(res, 'error fetch data');
-	        } else {
-	          _DefaultResponse2.default.sendData(res, lists);
-	        }
-	      });
+	      _DefaultResponse2.default.sendData(res, data);
 	    }
 	  });
 	});
+	/*
+	router.get("/:id_boad", (req, res, next) => {
+	  
+	  let {id_boad} = req.params;
+	  List.find({boad:  id_boad }).lean().exec( (err, lists) => {
+	    if (err) {
+	      RespDef.sendError(res, "error fetch data");
+	    } else {
+	      FetchModel.bindCards(lists, (err, result) => {
+	        if (err) {
+	          RespDef.sendError(res, 'error fetch data');
+	        } else {
+	          RespDef.sendData(res, lists);
+	        }
+	      });
+	       
+	    }
+	  });
+	});*/
 
 	router.post("/", function (req, res, next) {
 	  var _req$body = req.body;
@@ -1368,6 +1376,47 @@
 	      _models.Task.find({ todolist: todolist._id }).lean().exec(function (err, tasks) {
 	        todolist.tasks = tasks;
 	        callback(err, todolist);
+	      });
+	    }
+
+	    // lists, cards, labels, comments, todolists, tasks.
+
+	  }, {
+	    key: 'getAllWithoutNested',
+	    value: function getAllWithoutNested(callback) {
+	      var data = {};
+	      _async2.default.parallel([function (callback) {
+	        _models.List.find({}).lean().exec(function (err, lists) {
+	          data.lists = lists;
+	          callback(err, lists);
+	        });
+	      }, function (callback) {
+	        _models.Card.find({}).lean().exec(function (err, cards) {
+	          data.cards = cards;
+	          callback(err, cards);
+	        });
+	      }, function (callback) {
+	        _models.Label.find({}).lean().exec(function (err, labels) {
+	          data.labels = labels;
+	          callback(err, labels);
+	        });
+	      }, function (callback) {
+	        _models.Comment.find({}).lean().exec(function (err, comments) {
+	          data.comments = comments;
+	          callback(err, comments);
+	        });
+	      }, function (callback) {
+	        _models.Todolist.find({}).lean().exec(function (err, todolists) {
+	          data.todolists = todolists;
+	          callback(err, todolists);
+	        });
+	      }, function (callback) {
+	        _models.Task.find({}).lean().exec(function (err, tasks) {
+	          data.tasks = tasks;
+	          callback(err, tasks);
+	        });
+	      }], function (err, result) {
+	        callback(err, data);
 	      });
 	    }
 	  }]);

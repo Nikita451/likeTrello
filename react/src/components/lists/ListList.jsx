@@ -11,17 +11,22 @@ class ListList extends React.Component {
     }
     
     render() {
+       
         return (
             <div className="listPage">
-                <ListSearch />
+                <ListSearch
+                    onAddList={this.props.onAddList}
+                 />
                 <div className="lists" >
                 {
                     this.props.lists.map( (list) => 
                         <ListView
                         key={list._id}
+                        id={list._id}
                         name={list.name}
-                        cards={list.cards}
                         id_boad={this.props.id_boad}
+                        addCard={this.props.addCard.bind(null, list._id)}
+                        updateList={this.props.updateList}
                         />
                     )
                 }

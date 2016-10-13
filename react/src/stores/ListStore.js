@@ -14,17 +14,7 @@ class ListStore extends EventEmitter {
     getLists() {
         return _lists;
     }
-
-    getCard(id) {
-        for (let i=0; i < _lists.length; i++) {
-            for (let j=0; j < _lists[i].cards.length; j++ ) {
-                if ( _lists[i].cards[j]._id == id ) {
-                    return _lists[i].cards[j];
-                }
-            }
-        }
-    }
-
+    
     getError() {
         return _error;
     }
@@ -35,6 +25,15 @@ class ListStore extends EventEmitter {
 
     removeChangeListener(callback) {
         this.removeListener(CHANGE_EVENT, callback);
+    }
+
+    _updateList(id, name) {
+        for (let j=0; j < _lists.length; j++) {
+            if (_lists[j]._id == id) {
+                _lists[j].name = name;
+                return;
+            }
+        }
     }
 
     emitChange() {
@@ -49,12 +48,34 @@ AppDisp.register( (action) => {
   switch(action.type) {
     case AppConst.LIST_LOAD_SUCCESS:
       _error = null;
-      _lists = action.items;
+      _lists = action.items.lists;
       listStore.emitChange();
       break;
     case AppConst.LIST_LOAD_FAIL:
-      _lists = action.items;
-      _error = action.err;
+      _lists = [];
+      _error = action.error;
+      listStore.emitChange();
+      break;
+
+    case AppConst.LIST_CREATE_SUCCESS:
+      _error = null;
+      _lists.push( action.item );
+      listStore.emitChange();
+      break;
+
+    case AppConst.LIST_CREATE_FAIL:
+      _error = action.error;
+      listStore.emitChange();
+      break;
+    
+    case AppConst.LIST_UPDATE_SUCCESS:
+      _error = null;
+      listStore._updateList(action.item._id, action.item.name);
+      listStore.emitChange();
+      break;
+
+    case AppConst.LIST_UPDATE_FAIL:
+      _error = action.error;
       listStore.emitChange();
       break;
   };

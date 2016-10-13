@@ -1,38 +1,68 @@
 import React from 'react';
-import dateformat from 'dateformat';
-import ListStore from '../../stores/ListStore.js';
+import LabelInCardDet from '../../containers/CardDet/Labels.jsx';
+import TodolistInCardDet from '../../containers/CardDet/Todolists.jsx';
+import CommentsContainer from '../../containers/CardDet/Comments.jsx';
+
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {List, ListItem} from 'material-ui/List';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
-import Checkbox from 'material-ui/Checkbox';
 
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRedo from 'material-ui/svg-icons/content/redo';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 import Subheader from 'material-ui/Subheader';
-import Chip from 'material-ui/Chip';
 
 import "./CardViewDet.less";
 
-import Avatar from 'material-ui/Avatar';
-import ActionAssignment from 'material-ui/svg-icons/action/assignment';
-import {blue500, yellow600} from 'material-ui/styles/colors';
+function getState() {
+    return {
+        updateText: "",
+        isEdit: false,
+        isNewObject: false,
+        newObject: "",
+        labelObject: "",
+        newObjText: "",
+    };
+}
 
 class CardViewDetail extends React.Component {
 
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
+        this.state = getState( );
     }
 
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
+    editStart = () => {
+        this.setState({
+            isEdit: true,
+            updateText: this.props.card.name,
+        });
     }
 
-    handleClose = () => {
-        const {id} = this.props.params;
-        this.context.router.push(`/boad/${id}`);
+    editEnd = () => {
+        this.setState({
+            isEdit: false,
+        });
+    }
+
+    saveUpdateCard = () => {
+        let updateText = this.state.updateText;
+        this.editEnd();
+        this.props.saveUpdateCard( updateText );
+    }
+
+    onChangeText = (e) => {
+        this.setState({
+            updateText: e.target.value,
+        });
+    }
+
+    cancelUpdateCard = () => {
+        this.setState({
+            updateText: this.props.card.name,
+        });
+        this.editEnd();
     }
 
     handleRequestDelete() {
@@ -43,34 +73,45 @@ class CardViewDetail extends React.Component {
 
     }
 
-    setDefaultValueForTodolist(tasks) {
-        let completeTasks = tasks.reduce( (sum, task) => {
-            if (task.complete) {
-                return sum + 1
-            } else {
-                return sum;
-            }
-        },0);
-        return completeTasks / tasks.length;
+    onAddLabel = () => {
+        this.setState({
+            isNewObject: true,
+            newObject: "label",
+            labelObject: "Метка"
+        });
     }
 
+    closeAdd = () => {
+        this.setState({
+            isNewObject: false,
+            newObject: "",
+            newObjText: "",
+        });
+    }
+
+    changeNewObj = (e) => {
+        this.setState({
+            newObjText: e.target.value,
+        });
+    }
+
+    addLabel = () => {
+        this.props.addLabel( this.props.card._id, this.refs._input.value, this.refs._color.value   );
+        this.closeAdd();
+    }
 
     render() {
-        let card = ListStore.getCard( this.props.params.id_card );
-        const actions = [
+      const actions = [
       <FlatButton
             label="Закрыть"
             primary={true}
-            onTouchTap={this.handleClose}
+            onTouchTap={this.props.handleClose}
         />,
         ];
-        const styles = {
-            chip: {
-                margin: 4,
-                float: "left"
-            }};
         
         return (
+            <div>
+            {this.props.card? 
             <Dialog
                 actions={actions}
                 modal={true}
@@ -82,8 +123,20 @@ class CardViewDetail extends React.Component {
                         <Subheader>Функции</Subheader>
                         <ListItem primaryText="Копировать" leftIcon={<ContentCopy />} />
                         <ListItem primaryText="Переместить" leftIcon={<ContentRedo />} />
-                        <ListItem primaryText="Метка" leftIcon={<ContentAdd />} />
+                        <ListItem onTouchTap={this.onAddLabel} primaryText="Метка" leftIcon={<ContentAdd />} />
                         <ListItem primaryText="Чек-лист" leftIcon={<ContentAdd />} />
+                        {this.state.isNewObject?    
+                        <ListItem>
+                            <label> {this.state.labelObject} </label> <br />
+                            <input onChange={this.changeNewObj} ref="_input" /> <br />
+                            <input ref="_color" type="color" /> <br />
+                            <FlatButton secondary={true} onTouchTap={this.closeAdd} label="Отмена" />
+                            <FlatButton disabled={!this.state.newObjText} 
+                            primary={true} onTouchTap={this.addLabel} label="ОК" />
+                        </ListItem>
+                        :
+                        <div></div>
+                        }
                     </List>
                 </div>
                 <div className="rightSide">
@@ -92,70 +145,43 @@ class CardViewDetail extends React.Component {
                       label="Карточка"
                       className="tab"
                       >
-                        <div className="labels">
-                        {
-                            card.labels.map( (label) =>  
-                                <Chip
-                                    backgroundColor={label.color}
-                                    labelColor="#fff"
-                                    onRequestDelete={this.handleRequestDelete}
-                                    onTouchTap={this.handleTouchTap}
-                                    style={styles.chip}
-                                    >
-                                    { label.name }
-                                </Chip>
-                            )
-                        }
-                        </div>
+                      <div className="cardName">
+                      {this.state.isEdit?
+                         <div>
+                            <input 
+                                value={this.state.updateText}
+                                onChange={this.onChangeText}
+                            />
+                            <FlatButton onClick={this.cancelUpdateCard} label="Отмена" />
+                            <FlatButton disabled={!this.state.updateText} primary={true} onClick={this.saveUpdateCard} label="Сохранить" />
+                         </div>
+                        :
+                        <p onClick={this.editStart} className="nameLiSpan"> {this.props.card.name} </p>
+                      }
+                      </div>
+                        <LabelInCardDet 
+                            id_card={this.props.card._id}
+                         />
                     </Tab>
-                    <Tab
-                      label="Чек-листы">
-                        <div className="todolists">
-                        {
-                            card.todolists.map( (todolist) =>
-                                <div>
-                                    <h5> {todolist.name} </h5>
-                                    <Slider 
-                                        defaultValue={this.setDefaultValueForTodolist(todolist.tasks)} 
-                                     />
-                                    <div>
-                                        {
-                                            todolist.tasks.map( (task) =>
-                                                <div>
-                                                  <Checkbox
-                                                        label={task.name}
-                                                        defaultChecked={task.complete}
-                                                        />  
-                                                 </div>
-                                            )
-                                        }
-                                    </div>
-                                </div>
-                            )
-                        }
-                        </div>
+                    <Tab label="Чек-листы">
+                        <TodolistInCardDet 
+                            id_card={this.props.card._id}
+                         />
                     </Tab>
                     <Tab
                       label="Комментарии"
                      >
-                        <List className="comments">
-                            <Subheader>Комментарии</Subheader>    
-                            {
-                                card.comments.map( (comment) =>
-                                     <ListItem
-                                        //leftAvatar={<Avatar src="images/ok-128.jpg" />}
-                                        leftAvatar={<Avatar icon={<ActionAssignment />} backgroundColor={blue500} />}
-                                        secondaryText={ dateformat(comment.date_create, "hh:MM dd.mm.yyyy") }
-                                        primaryText={comment.text} 
-                                        secondaryTextLines={2}
-                                        />
-                                )
-                            }
-                        </List>
-                    </Tab>
+                        <CommentsContainer 
+                            id_card={this.props.card._id}
+                         />
+                     </Tab>
                 </Tabs>
                 </div>
             </Dialog>
+            :
+            <div></div>
+            }
+            </div>
         );
     }
 }
