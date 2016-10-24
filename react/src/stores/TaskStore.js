@@ -25,6 +25,16 @@ class TaskStore extends EventEmitter {
         return _error;
     }
 
+    updateTask(item) {
+        for (var k=0; k < _tasks.length; k++) {
+            if (_tasks[k]._id == item._id) {
+                _tasks[k].name = item.name;
+                _tasks[k].complete = item.complete;
+                return;
+            }
+        }
+    }
+
     addChangeListener(callback) {
         this.on( CHANGE_EVENT, callback );
     }
@@ -51,6 +61,25 @@ AppDisp.register( (action) => {
     case AppConst.LIST_LOAD_FAIL:
       _tasks= [];
       _error = action.err;
+      taskStore.emitChange();
+      break;
+    case AppConst.TASK_CREATE_SUCCESS:
+      _tasks.push( action.item );
+      taskStore.emitChange();
+      break;
+
+    case AppConst.TASK_CREATE_FAIL:
+      _error = action.error;
+      taskStore.emitChange();
+      break;
+
+    case AppConst.TASK_UPDATE_SUCCESS:
+      taskStore.updateTask( action.item );
+      taskStore.emitChange();
+      break;
+
+    case AppConst.TASK_UPDATE_FAIL:
+      _error = action.error;
       taskStore.emitChange();
       break;
   };

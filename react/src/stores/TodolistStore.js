@@ -21,6 +21,15 @@ class TodolistStore extends EventEmitter {
         return todolists;
     }
 
+    updateTodolist(id, name) {
+        for (let i = 0; i < _todolists.length; i++) {
+            if (_todolists[i]._id == id) {
+                _todolists[i].name = name;
+                return;
+            }
+        }
+    }
+
     getError() {
         return _error;
     }
@@ -50,7 +59,24 @@ AppDisp.register( (action) => {
       break;
     case AppConst.LIST_LOAD_FAIL:
       _todolists= [];
-      _error = action.err;
+      _error = action.error;
+      todolistStore.emitChange();
+      break;
+    case AppConst.TODOLIST_CREATE_SUCCESS:
+      _todolists.push( action.item );
+      _error = null;
+      todolistStore.emitChange();
+      break;
+    case AppConst.TODOLIST_CREATE_FAIL:
+      _error = action.error;
+      todolistStore.emitChange();
+      break;
+    case AppConst.TODOLIST_UPDATE_SUCCESS:
+      todolistStore.updateTodolist( action.item._id, action.item.name );
+      todolistStore.emitChange();
+      break;
+    case AppConst.TODOLIST_UPDATE_FAIL:
+      _error = action.error;
       todolistStore.emitChange();
       break;
   };

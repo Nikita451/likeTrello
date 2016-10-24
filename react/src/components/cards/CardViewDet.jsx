@@ -17,12 +17,16 @@ import "./CardViewDet.less";
 
 function getState() {
     return {
+        // labels
         updateText: "",
         isEdit: false,
         isNewObject: false,
-        newObject: "",
-        labelObject: "",
         newObjText: "",
+        // todolists
+        isNewTodolist: false,
+        newTodolistText: "",
+        isEditTodolist: false,
+        updateTextTodolist: "",
     };
 }
 
@@ -76,16 +80,32 @@ class CardViewDetail extends React.Component {
     onAddLabel = () => {
         this.setState({
             isNewObject: true,
-            newObject: "label",
-            labelObject: "Метка"
+        });
+    }
+
+    onAddTodolist = () => {
+        this.setState({
+            isNewTodolist: true,
         });
     }
 
     closeAdd = () => {
         this.setState({
             isNewObject: false,
-            newObject: "",
             newObjText: "",
+        });
+    }
+
+    closeTodolist =  () => {
+        this.setState({
+            isNewTodolist: false,
+            newTodolistText: "",
+        });
+    }
+
+    changeTodolist = (e) =>  {
+        this.setState({
+            newTodolistText: e.target.value,
         });
     }
 
@@ -98,6 +118,11 @@ class CardViewDetail extends React.Component {
     addLabel = () => {
         this.props.addLabel( this.props.card._id, this.refs._input.value, this.refs._color.value   );
         this.closeAdd();
+    }
+
+    addTodolist = () => {
+        this.props.addTodolist( this.props.card._id, this.state.newTodolistText );
+        this.closeTodolist();
     }
 
     render() {
@@ -116,6 +141,7 @@ class CardViewDetail extends React.Component {
                 actions={actions}
                 modal={true}
                 open={true}
+                autoScrollBodyContent={true}
                 className="DetailCard"
             >
                 <div className="leftSide">
@@ -124,15 +150,26 @@ class CardViewDetail extends React.Component {
                         <ListItem primaryText="Копировать" leftIcon={<ContentCopy />} />
                         <ListItem primaryText="Переместить" leftIcon={<ContentRedo />} />
                         <ListItem onTouchTap={this.onAddLabel} primaryText="Метка" leftIcon={<ContentAdd />} />
-                        <ListItem primaryText="Чек-лист" leftIcon={<ContentAdd />} />
+                        <ListItem onTouchTap={this.onAddTodolist}  primaryText="Чек-лист" leftIcon={<ContentAdd />} />
                         {this.state.isNewObject?    
                         <ListItem>
-                            <label> {this.state.labelObject} </label> <br />
+                            <label>  Метка </label> <br />
                             <input onChange={this.changeNewObj} ref="_input" /> <br />
                             <input ref="_color" type="color" /> <br />
                             <FlatButton secondary={true} onTouchTap={this.closeAdd} label="Отмена" />
                             <FlatButton disabled={!this.state.newObjText} 
                             primary={true} onTouchTap={this.addLabel} label="ОК" />
+                        </ListItem>
+                        :
+                        <div></div>
+                        }
+                        {this.state.isNewTodolist?
+                        <ListItem>
+                            <label> Чек-лист </label> <br />
+                            <input onChange={this.changeTodolist} ref="_input2" /> <br />
+                            <FlatButton secondary={true} onTouchTap={this.closeTodolist} label="Отмена" />
+                            <FlatButton disabled={!this.state.newTodolistText} 
+                            primary={true} onTouchTap={this.addTodolist} label="ОК" />
                         </ListItem>
                         :
                         <div></div>
@@ -166,6 +203,7 @@ class CardViewDetail extends React.Component {
                     <Tab label="Чек-листы">
                         <TodolistInCardDet 
                             id_card={this.props.card._id}
+                            updateTodolist={this.props.updateTodolist}
                          />
                     </Tab>
                     <Tab

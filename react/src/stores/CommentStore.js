@@ -53,6 +53,16 @@ AppDisp.register( (action) => {
       _error = action.err;
       commentStore.emitChange();
       break;
+    case AppConst.COMMENT_CREATE_SUCCESS:
+      _comments.push( action.item );
+      _error = null;
+      commentStore.emitChange();
+      break;
+
+    case AppConst.COMMENT_CREATE_FAIL:
+      _error = action.err;
+      commentStore.emitChange();
+      break;
   };
 });
 

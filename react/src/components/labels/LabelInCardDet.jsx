@@ -25,6 +25,7 @@ class Labels extends React.Component {
                     <Chip
                         backgroundColor={label.color}
                         labelColor="#fff"
+                        key={label._id}
                         onRequestDelete={this.props.handleRequestDelete }
                         onTouchTap={this.handleTouchTap}
                         style={styles.chip}

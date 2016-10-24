@@ -2,6 +2,7 @@ import React from 'react';
 import CardStore from '../stores/CardStore.js';
 import CardAction from "../actions/CardAction.js";
 import LabelAction from "../actions/LabelAction.js";
+import TodolistAction from "../actions/TodolistAction";
 
 import CardDetailView from '../components/cards/CardViewDet.jsx';
 
@@ -45,6 +46,14 @@ class CardViewDetail extends React.Component {
         LabelAction.createLabel(id, name, color);
     }
 
+    addTodolist(id, name) {
+        TodolistAction.createTodolist(id, name);
+    }
+
+    updateTodolist(id, name) {
+        TodolistAction.updateTodolist(id, name);
+    }
+
     componentWillUnmount() {
         CardStore.removeChangeListener( this._change );
     }
@@ -56,6 +65,8 @@ class CardViewDetail extends React.Component {
             handleClose={this.handleClose}
             saveUpdateCard={this.saveUpdateCard}
             addLabel={this.addLabel}
+            addTodolist={this.addTodolist}
+            updateTodolist={this.updateTodolist}
             />
         );
     }
