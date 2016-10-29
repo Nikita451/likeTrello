@@ -40,6 +40,10 @@ class ListSearch extends React.Component {
         }); 
     }
 
+    changeSearch = (e) => {
+        this.props._onSearch( e.target.value )
+    }
+
     render() {
         const actions = [
         <FlatButton
@@ -59,6 +63,7 @@ class ListSearch extends React.Component {
             <div className="searchPanel">
                 <TextField
                     hintText="Поиск списков"
+                    onChange={this.changeSearch}
                 />
                 <FloatingActionButton mini={true} onClick={this.showDialog}>
                     <ContentAdd />

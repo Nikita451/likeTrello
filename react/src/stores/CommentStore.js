@@ -37,6 +37,20 @@ class CommentStore extends EventEmitter {
         this.emit(CHANGE_EVENT);
     }
 
+    delete(id) {
+        let curIndex = _comments.findIndex( com => com._id == id )
+        _comments.splice(curIndex, 1)
+    }
+
+    deleteByCardId(id_card) {
+        for (let i=0; i < _comments.length; i++) {
+            if (_comments[i].card == id_card) {
+                this.delete( _comments[i]._id )
+            }
+        }
+        this.emitChange();
+    }
+
 }
 
 let commentStore = new CommentStore();

@@ -1,6 +1,7 @@
 import AppConst from '../constants';
 import AppDisp from '../dispatcher';
 import { EventEmitter } from 'events';
+import TaskStore from './TaskStore.js';
 
 let _todolists = [];
 let _error = null;
@@ -46,6 +47,21 @@ class TodolistStore extends EventEmitter {
         this.emit(CHANGE_EVENT);
     }
 
+    delete(id_todolist) {
+      TaskStore.deleteByTodolist( id_todolist )
+      let curIndex = _todolists.findIndex( todolist => todolist._id == id_todolist )
+      _todolists.splice(curIndex, 1)
+    }
+
+    deleteByCardId( id_card ) {
+        for (let i=0; i < _todolists.length; i++) {
+            if (_todolists[i].card == id_card  ) {
+                this.delete( _todolists[i]._id )
+            }
+        }
+        TaskStore.emitChange()
+        this.emitChange();
+    }
 }
 
 let todolistStore = new TodolistStore();
@@ -76,6 +92,17 @@ AppDisp.register( (action) => {
       todolistStore.emitChange();
       break;
     case AppConst.TODOLIST_UPDATE_FAIL:
+      _error = action.error;
+      todolistStore.emitChange();
+      break;
+
+    case AppConst.TODOLIST_DELETE_SUCCESS:
+      todolistStore.delete( action.item._id )
+      TaskStore.emitChange()
+      todolistStore.emitChange();
+      break;
+
+    case AppConst.TODOLIST_DELETE_FAIL:
       _error = action.error;
       todolistStore.emitChange();
       break;

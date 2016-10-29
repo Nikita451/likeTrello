@@ -47,6 +47,19 @@ class TaskStore extends EventEmitter {
         this.emit(CHANGE_EVENT);
     }
 
+    delete(id_task) {
+      let curIndex = _tasks.findIndex( elem => elem._id == id_task )
+      _tasks.splice(curIndex, 1)
+    }
+
+    deleteByTodolist( id_todolist ) {
+        for (let i=0; i < _tasks.length; i++) {
+            if (_tasks[i].todolist == id_todolist) {
+                this.delete( _tasks[i]._id )
+            }
+        }
+    }
+
 }
 
 let taskStore = new TaskStore();
@@ -79,6 +92,16 @@ AppDisp.register( (action) => {
       break;
 
     case AppConst.TASK_UPDATE_FAIL:
+      _error = action.error;
+      taskStore.emitChange();
+      break;
+
+    case AppConst.TASK_DELETE_SUCCESS:
+      taskStore.delete( action.item._id )
+      taskStore.emitChange();
+      break;
+
+    case AppConst.TASK_DELETE_FAIL:
       _error = action.error;
       taskStore.emitChange();
       break;

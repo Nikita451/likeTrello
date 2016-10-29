@@ -2,6 +2,8 @@ import AppConst from '../constants';
 import AppDisp from '../dispatcher';
 import { EventEmitter } from 'events';
 
+import ListStore from './ListStore.js'
+
 let _boads = [];
 let _error = null;
 const CHANGE_EVENT = 'change';
@@ -21,12 +23,9 @@ class BoadStore extends EventEmitter {
 	}
 
   _deleteById(id) {
-    for (let i=0; i < _boads.length; i++) {
-      if (_boads[i]._id == id) {
-        _boads.splice(i, 1);
-        break;
-      }
-    }
+    ListStore.deleteByIdBoad( id )
+    let curIndex = _boads.findIndex( (boad) => boad._id == id )
+    _boads.splice(curIndex, 1)
   }
 
   _updateById(id, name) {
@@ -81,6 +80,7 @@ AppDisp.register( (action) => {
 
     case AppConst.BOAD_DELETE_SUCCESS:
       let id = action.item._id;
+      alert('before delete boad');
       boadStore._deleteById( id );
       boadStore.emitChange();
       break;

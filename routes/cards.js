@@ -42,7 +42,7 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
   RemoveModel.removeCard(id, (err, card) => {
     if (err) {

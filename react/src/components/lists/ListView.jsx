@@ -6,6 +6,8 @@ import CardList from '../cards/CardList.jsx';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton';
 
 import "./ListView.less";
 
@@ -17,7 +19,7 @@ class ListView extends React.Component {
           text: "",
           isEdit: false,
           updateTextList: this.props.name,
-          cards: [],
+          cards: CardStore.getCards( this.props.id ),
         };
         this.oldTextUpdate = "";
         CardStore.addChangeListener(this._change)
@@ -33,7 +35,7 @@ class ListView extends React.Component {
         this.setState( { cards: CardStore.getCards( this.props.id )});     
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
       CardStore.removeChangeListener( this._change );
     }
 
@@ -86,6 +88,10 @@ class ListView extends React.Component {
       this.props.updateList( this.props.id, this.state.updateTextList );
     }
 
+    deleteList(id) {
+      this.props.deleteList(id);
+    }
+
     render() {
       const {name} = this.props;
       const actions = [
@@ -111,10 +117,14 @@ class ListView extends React.Component {
                 />
                 <FlatButton onClick={this.cancelEditUpdateList} label="Отмена" />
                 <FlatButton disabled={!this.state.updateTextList} primary={true} onClick={this.saveUpdateList} label="Сохранить" />
-              </div>
-              
+              </div>              
             :
-              <h4 onClick={this.editStart}> {name} </h4>   
+              <div>
+                <IconButton style={{float: "right"}} onClick={this.props.deleteList.bind(null, this.props.id)}>
+                    <ActionDelete />
+                </IconButton>
+                <h4 onClick={this.editStart}> {name} </h4>    
+              </div>
             }
            
            <CardList

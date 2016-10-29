@@ -49,7 +49,9 @@ class BoadContainer extends React.Component {
   }
 
   deleteBoad(id) {
-    BoadAction.deleteBoad( id );
+    if (confirm("Удалить доску и все вложенные компоненты?")) {
+      BoadAction.deleteBoad( id );
+    }
   }
 
   changeText(id, {name}) {

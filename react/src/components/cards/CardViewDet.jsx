@@ -12,6 +12,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRedo from 'material-ui/svg-icons/content/redo';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 import Subheader from 'material-ui/Subheader';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 
 import "./CardViewDet.less";
 
@@ -69,8 +70,8 @@ class CardViewDetail extends React.Component {
         this.editEnd();
     }
 
-    handleRequestDelete() {
-
+    handleRequestDelete(id_label) {
+        alert( id_label );
     }
 
     handleTouchTap() {
@@ -147,8 +148,7 @@ class CardViewDetail extends React.Component {
                 <div className="leftSide">
                     <List>
                         <Subheader>Функции</Subheader>
-                        <ListItem primaryText="Копировать" leftIcon={<ContentCopy />} />
-                        <ListItem primaryText="Переместить" leftIcon={<ContentRedo />} />
+                        <ListItem onTouchTap={this.props.deleteCard} primaryText="Удалить" leftIcon={<ActionDelete />} />
                         <ListItem onTouchTap={this.onAddLabel} primaryText="Метка" leftIcon={<ContentAdd />} />
                         <ListItem onTouchTap={this.onAddTodolist}  primaryText="Чек-лист" leftIcon={<ContentAdd />} />
                         {this.state.isNewObject?    
@@ -198,12 +198,13 @@ class CardViewDetail extends React.Component {
                       </div>
                         <LabelInCardDet 
                             id_card={this.props.card._id}
+                            handleRequestDelete={this.handleRequestDelete}
+
                          />
                     </Tab>
                     <Tab label="Чек-листы">
                         <TodolistInCardDet 
                             id_card={this.props.card._id}
-                            updateTodolist={this.props.updateTodolist}
                          />
                     </Tab>
                     <Tab

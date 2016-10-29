@@ -37,6 +37,23 @@ class LabelStore extends EventEmitter {
         this.emit(CHANGE_EVENT);
     }
 
+    delete(id) {
+      let curIndex = _labels.findIndex( (elem) => elem._id == id );
+      if (curIndex != -1) {
+          _labels.splice(curIndex, 1);
+      }
+    }
+
+    deleteByCardId(id_card) {
+        for (let i=0; i < _labels.length; i++) {
+            if (_labels[i].card == id_card) {
+                this.delete( _labels[i]._id )
+            }
+        }
+        this.emitChange();
+    }
+
+
 }
 
 let labelStore = new LabelStore();
@@ -61,6 +78,15 @@ AppDisp.register( (action) => {
       break;
 
     case AppConst.CARD_UPDATE_FAIL:
+      _error = action.error;
+      labelStore.emitChange();
+      break;
+
+    case AppConst.LABEL_DELETE_SUCCESS:
+      labelStore.delete( action.item._id )
+      labelStore.emitChange();
+      break;
+    case AppConst.LABEL_DELETE_FAIL:
       _error = action.error;
       labelStore.emitChange();
       break;

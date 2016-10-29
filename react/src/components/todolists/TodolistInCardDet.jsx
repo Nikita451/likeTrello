@@ -5,6 +5,12 @@ import Slider from 'material-ui/Slider';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 
+import ActionDelete from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton';
+import ActionEdit from 'material-ui/svg-icons/editor/mode-edit';
+
+import "./TodolistInCardDet.less";
+
 class TodolistsInCard extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -45,9 +51,9 @@ class TodolistsInCard extends React.Component {
     }
 
     render() {
+        const {deleteTodolist, todolist} = this.props;
         return (
-            
-            <div>
+            <div className="todolists">
                 {this.state.isEditing ?
                 <div>
                     <input value={this.state.updateText} onChange={this.changeTodolist} />
@@ -59,13 +65,20 @@ class TodolistsInCard extends React.Component {
                             label="Сохранить" />
                 </div>
                 :
-                <h5 onClick={this.startEdit}> {this.props.todolist.name} </h5>
+                <div className="todolist_name">
+                    <IconButton className="delIcon" onClick={deleteTodolist.bind(null, todolist._id)}>
+                        <ActionDelete />
+                    </IconButton>
+                    <IconButton className="delIcon" onClick={this.startEdit}>
+                        <ActionEdit />
+                    </IconButton>
+                    <h3 onClick={this.startEdit}> {todolist.name} </h3>
+                </div>
                 }
                 <TaskContainer 
-                    id_todolist={this.props.todolist._id}
+                    id_todolist={todolist._id}
                     />
-            </div>
-                    
+            </div>  
         );
     }
 

@@ -29,6 +29,12 @@ class Todolists extends React.Component
         TodolistAction.updateTodolist(id, name);
     }
 
+    deleteTodolist( id ) {
+        if (confirm("Удалить чек-лист?")) {
+            TodolistAction.delete( id )
+        }
+    }
+
     render() {
         return (
             <div className="todolists">
@@ -38,6 +44,7 @@ class Todolists extends React.Component
                             key={todolist._id}
                             todolist={todolist}
                             updateTodolist={this.updateTodolist}
+                            deleteTodolist={this.deleteTodolist}
                         />
                     )
                 }

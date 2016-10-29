@@ -15,12 +15,14 @@ class CommentComponent extends React.Component {
     render() {
         let {comment} = this.props;
         return (
+            
             <ListItem
                 leftAvatar={<Avatar icon={<ActionAssignment />} backgroundColor={blue500} />}
                 secondaryText={ dateformat(comment.date_create, "hh:MM dd.mm.yyyy") }
                 primaryText={comment.text} 
                 secondaryTextLines={2}
             />
+            
         );
     }
 }

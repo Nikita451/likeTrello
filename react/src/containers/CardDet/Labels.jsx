@@ -1,6 +1,7 @@
 import React from 'react';
 import LabelStore from '../../stores/LabelStore.js';
 import LabelInCardDet from '../../components/labels/LabelInCardDet.jsx';
+import LabelAction from '../../actions/LabelAction.js';
 
 function getState( id_card ) {
     return {
@@ -23,16 +24,23 @@ class Labels extends React.Component {
         LabelStore.removeChangeListener( this._change );
     }
 
-    handleRequestDelete() {
-
+    handleRequestDelete(id_label) {
+        if (confirm("Удалить метку?") ) {
+            LabelAction.deleteLabel(id_label);
+        }
     }
 
     render() {
         return (
-            <LabelInCardDet 
-                labels={this.state.labels}
-                handleRequestDelete={this.handleRequestDelete}
-             />
+            <div className="labels">
+                {this.state.labels.map( (label) =>
+                    <LabelInCardDet
+                        key={label._id}
+                        {...label}
+                        handleRequestDelete={this.handleRequestDelete}
+                    />        
+                )}
+            </div>
         );
     }
 

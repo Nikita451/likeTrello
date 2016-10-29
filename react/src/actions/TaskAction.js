@@ -43,6 +43,25 @@ class TaskAction {
         });
     }
 
+    static removeTask( id_task ) {
+        $.ajax({
+            url: `/tasks/${id_task}`,
+            type: 'DELETE',
+            success: function (item) {
+            AppDisp.dispatch({
+                type: AppConst.TASK_DELETE_SUCCESS,
+                item: item,
+            });
+            },
+            error: function (err) {
+            AppDisp.dispatch({
+                type: AppConst.TASK_DELETE_FAIL,
+                error: err,
+            });
+            }
+        });
+    }
+
 }
 
 export default TaskAction;

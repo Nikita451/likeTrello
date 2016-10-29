@@ -2,6 +2,10 @@ import AppConst from '../constants';
 import AppDisp from '../dispatcher';
 import { EventEmitter } from 'events';
 
+import TodolistStore from './TodolistStore.js';
+import LabelStore from './LabelStore.js';
+import CommentStore from './CommentStore.js';
+
 let _cards = [];
 let _error = null;
 const CHANGE_EVENT = 'change';
@@ -55,6 +59,23 @@ class CardStore extends EventEmitter {
         this.emit(CHANGE_EVENT);
     }
 
+    delete(id_card) {
+      TodolistStore.deleteByCardId( id_card )
+      LabelStore.deleteByCardId( id_card )
+      CommentStore.deleteByCardId( id_card )
+        let curIndex = _cards.findIndex( card => card._id == id_card )
+      _cards.splice(curIndex, 1)
+    }
+
+    deleteByListId(id_list) {
+        for (let i=0; i < _cards.length; i++) {
+            if (_cards[i].list == id_list) {
+                this.delete( _cards[i]._id )
+            }
+        }
+        this.emitChange();
+    }
+
 }
 
 let cardStore = new CardStore();
@@ -94,7 +115,15 @@ AppDisp.register( (action) => {
       cardStore.emitChange();
       break;
 
-    
+    case AppConst.CARD_DELETE_SUCCESS:  
+      cardStore.delete( action.item._id )
+      cardStore.emitChange();
+      break;
+
+    case AppConst.CARD_DELETE_FAIL:
+      _error = action.error;
+      cardStore.emitChange();
+      break;
   };
 });
 

@@ -23,8 +23,6 @@ class BoadList extends React.Component {
 		             deleteBoad={this.props.deleteBoad.bind(null, boad._id)}
 		             changeText={this.props.changeText.bind(null, boad._id)}
 		            />
-								
-								
 		      	)
 		      }
 				</div>

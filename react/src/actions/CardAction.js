@@ -42,6 +42,25 @@ class CardAction {
             }
         });
     }
+
+    static delete(id_card) {
+        $.ajax({
+            url: `/cards/${id_card}`,
+            type: 'DELETE',
+            success: function (item) {
+                AppDisp.dispatch({
+                    type: AppConst.CARD_DELETE_SUCCESS,
+                    item: item,
+                });
+            },
+            error: function (err) {
+                AppDisp.dispatch({
+                    type: AppConst.CARD_DELETE_FAIL,
+                    error: err,
+                });
+            }
+        });
+    }
 }
 
 

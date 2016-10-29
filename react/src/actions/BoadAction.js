@@ -45,6 +45,7 @@ class BoadAction {
     }
 
     static deleteBoad(id) {
+        
         $.ajax({
             method: 'DELETE',
             url: '/boads/' + id,

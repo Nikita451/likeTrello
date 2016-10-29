@@ -23,6 +23,25 @@ class LabelAction {
         });
     }
 
+    static deleteLabel(id_label) {
+        $.ajax({
+            url: `/labels/${id_label}`,
+            type: 'DELETE',
+            success: function (item) {
+                AppDisp.dispatch({
+                    type: AppConst.LABEL_DELETE_SUCCESS,
+                    item: item,
+                });
+            },
+            error: function (err) {
+                AppDisp.dispatch({
+                    type: AppConst.LABEL_DELETE_FAIL,
+                    error: err,
+                });
+            }
+        });
+    }
+
 }
 
 

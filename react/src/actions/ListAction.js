@@ -61,6 +61,25 @@ class ListAction {
       });
     }
 
+    static delete(id) {
+      $.ajax({
+        url: `/lists/${id}`,
+        type: 'DELETE',
+        success: function (item) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_DELETE_SUCCESS,
+            item: item,
+          });
+        },
+        error: function (err) {
+          AppDisp.dispatch({
+            type: AppConst.LIST_DELETE_FAIL,
+            error: err,
+          });
+        }
+      });
+    }
+
 }
 
 export default ListAction;

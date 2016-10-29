@@ -1494,7 +1494,7 @@
 	  });
 	});
 
-	router.delete('/', function (req, res, next) {
+	router.delete('/:id', function (req, res, next) {
 	  var id = req.params.id;
 
 	  _RemoveModel2.default.removeCard(id, function (err, card) {

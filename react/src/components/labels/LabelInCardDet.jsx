@@ -18,23 +18,19 @@ class Labels extends React.Component {
                 margin: 4,
                 float: "left"
             }};
-        return (
-            <div className="labels">
-            {
-                this.props.labels.map( (label) =>  
-                    <Chip
-                        backgroundColor={label.color}
-                        labelColor="#fff"
-                        key={label._id}
-                        onRequestDelete={this.props.handleRequestDelete }
-                        onTouchTap={this.handleTouchTap}
-                        style={styles.chip}
-                        >
-                        { label.name }
-                    </Chip>
-                )
-            }
-            </div>
+        const {_id, name, color} = this.props;
+        return (  
+            
+            <Chip
+                backgroundColor={color}
+                labelColor="#fff"
+                key={_id}
+                onRequestDelete={this.props.handleRequestDelete.bind(null, _id) }
+                onTouchTap={this.handleTouchTap}
+                style={styles.chip}
+                >
+                { name }
+            </Chip>
         );
     }
 }

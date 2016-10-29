@@ -16,6 +16,7 @@ class ListList extends React.Component {
             <div className="listPage">
                 <ListSearch
                     onAddList={this.props.onAddList}
+                    _onSearch={this.props._onSearch}
                  />
                 <div className="lists" >
                 {
@@ -27,6 +28,7 @@ class ListList extends React.Component {
                         id_boad={this.props.id_boad}
                         addCard={this.props.addCard.bind(null, list._id)}
                         updateList={this.props.updateList}
+                        deleteList={this.props.deleteList}
                         />
                     )
                 }

@@ -6,6 +6,7 @@ import Slider from 'material-ui/Slider';
 import IconButton from 'material-ui/IconButton';
 import ActionAdd from 'material-ui/svg-icons/image/exposure-plus-1';
 import FlatButton from 'material-ui/FlatButton';
+import "./Task.less";
 
 function setDefaultValueForTodolist( tasks ) {
     let completeTasks = tasks.reduce( (sum, task) => {
@@ -66,10 +67,22 @@ class Task extends React.Component {
         TaskAction.update(id, text, currentCheck );
     }
 
+    removeTask(id_task) {
+        if (confirm("Удалить задание?") ) {
+            TaskAction.removeTask(id_task);
+        }
+        
+    }
+
+    componentWillUnmount() {
+        TaskStore.removeChangeListener(this._change)
+    }
+
     render() {
         return (
-            <div>
-            <Slider 
+            <div className="slider">
+            <Slider
+                style={{marginBottom: "0px"}} 
                 value={this.state.valueSlider} 
                 />
                 {
@@ -78,6 +91,7 @@ class Task extends React.Component {
                             key={task._id}
                             task={task}
                             saveUpdateTask={this.saveUpdateTask}
+                            removeTask={this.removeTask}
                         />        
                     )
                 }

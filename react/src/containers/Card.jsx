@@ -58,6 +58,13 @@ class CardViewDetail extends React.Component {
         CardStore.removeChangeListener( this._change );
     }
 
+    deleteCard = () => {
+        if (confirm("Удалить карточку?")) {
+            this.handleClose();
+            CardAction.delete( this.props.params.id_card )
+        }
+    }
+
     render() {
         return (
            <CardDetailView 
@@ -67,6 +74,7 @@ class CardViewDetail extends React.Component {
             addLabel={this.addLabel}
             addTodolist={this.addTodolist}
             updateTodolist={this.updateTodolist}
+            deleteCard={this.deleteCard}
             />
         );
     }

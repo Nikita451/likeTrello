@@ -44,6 +44,25 @@ class TodoListAction {
       });
     }
 
+    static delete(id_todolist) {
+      $.ajax({
+        url: `/todolists/${id_todolist}`,
+        type: 'DELETE',
+        success: function (item) {
+          AppDisp.dispatch({
+            type: AppConst.TODOLIST_DELETE_SUCCESS,
+            item: item,
+          });
+        },
+        error: function (err) {
+          AppDisp.dispatch({
+            type: AppConst.TODOLIST_DELETE_FAIL,
+            error: err,
+          });
+        }
+      });
+    }
+
 }
 
 export default TodoListAction;
