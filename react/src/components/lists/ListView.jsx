@@ -110,7 +110,7 @@ class ListView extends React.Component {
       return (
         <div className="list">
             {this.state.isEdit? 
-              <div>
+              <div className="editList">
                 <input
                   value={this.state.updateTextList}
                   onChange={this.changeUpdateList}

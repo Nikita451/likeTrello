@@ -67911,7 +67911,7 @@
 	        { className: 'list' },
 	        this.state.isEdit ? _react2.default.createElement(
 	          'div',
-	          null,
+	          { className: 'editList' },
 	          _react2.default.createElement('input', {
 	            value: this.state.updateTextList,
 	            onChange: this.changeUpdateList
@@ -68439,7 +68439,7 @@
 
 
 	// module
-	exports.push([module.id, ".list {\n  border-radius: 6px;\n  width: 250px;\n  min-height: 100px;\n  margin: 5px;\n  cursor: pointer;\n  float: left;\n  background-color: #ededed;\n  border: 1px solid #898989;\n  box-shadow: 1px 1px 3px #b2b3b3;\n  height: auto;\n  padding: 0px 10px;\n}\n.list h4 {\n  margin-left: 5px;\n  color: #23a2d9;\n  font-size: 16px;\n  position: relative;\n  left: 9px;\n  top: 10px;\n  font-weight: bold;\n  width: 80%;\n}\n.list .last_punkt {\n  color: #4d4d4d;\n  position: relative;\n  left: 14px;\n  top: -10px;\n  font-size: 0.95em;\n  z-index: 111;\n  padding-top: 15px;\n  padding-bottom: 5px;\n}\n.list .card:first-child {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.list .card:last-child {\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n}\n", ""]);
+	exports.push([module.id, ".list {\n  border-radius: 6px;\n  width: 250px;\n  min-height: 100px;\n  margin: 5px;\n  cursor: pointer;\n  float: left;\n  background-color: #ededed;\n  border: 1px solid #898989;\n  box-shadow: 1px 1px 3px #b2b3b3;\n  height: auto;\n  padding: 0px 10px;\n}\n.list .editList {\n  padding-top: 10px;\n  padding-left: 10px;\n}\n.list .editList input {\n  border: 1px solid blue;\n}\n.list h4 {\n  margin-left: 5px;\n  color: #23a2d9;\n  font-size: 16px;\n  position: relative;\n  left: 9px;\n  top: 10px;\n  font-weight: bold;\n  width: 80%;\n}\n.list .last_punkt {\n  color: #4d4d4d;\n  position: relative;\n  left: 14px;\n  top: -10px;\n  font-size: 0.95em;\n  z-index: 111;\n  padding-top: 15px;\n  padding-bottom: 5px;\n}\n.list .card:first-child {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.list .card:last-child {\n  border-bottom-left-radius: 4px;\n  border-bottom-right-radius: 4px;\n}\n", ""]);
 
 	// exports
 
@@ -69286,7 +69286,8 @@
 	                    _Dialog2.default,
 	                    {
 	                        actions: actions,
-	                        modal: true,
+	                        modal: false,
+	                        onRequestClose: this.props.handleClose,
 	                        open: true,
 	                        autoScrollBodyContent: true,
 	                        className: 'DetailCard'
@@ -72473,7 +72474,7 @@
 
 
 	// module
-	exports.push([module.id, ".todolists .todolist_name .delIcon {\n  float: right;\n  position: relative;\n  top: -15px;\n}\n", ""]);
+	exports.push([module.id, ".todolists .todolist_name .delIcon {\n  float: right;\n  position: relative;\n  top: -10px;\n}\n", ""]);
 
 	// exports
 
@@ -74071,7 +74072,7 @@
 
 
 	// module
-	exports.push([module.id, ".DetailCard .leftSide {\n  float: left;\n}\n.DetailCard .rightSide {\n  margin-left: 230px;\n}\n.DetailCard .rightSide .labels {\n  padding-top: 10px;\n  overflow: auto;\n}\n.DetailCard .rightSide .labels div {\n  margin: 5px;\n}\n", ""]);
+	exports.push([module.id, ".DetailCard .leftSide {\n  float: left;\n}\n.DetailCard .rightSide {\n  margin-left: 230px;\n}\n.DetailCard .rightSide .labels {\n  padding-top: 10px;\n  overflow: auto;\n}\n.DetailCard .rightSide .labels div {\n  margin: 5px;\n}\n.DetailCard .rightSide .taskAction {\n  padding: 0px !important;\n}\n.DetailCard .rightSide .checkbox {\n  margin-bottom: 0px !important;\n  padding-bottom: 0px !important;\n}\n", ""]);
 
 	// exports
 

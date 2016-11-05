@@ -140,7 +140,8 @@ class CardViewDetail extends React.Component {
             {this.props.card? 
             <Dialog
                 actions={actions}
-                modal={true}
+                modal={false}
+                onRequestClose={this.props.handleClose}
                 open={true}
                 autoScrollBodyContent={true}
                 className="DetailCard"
